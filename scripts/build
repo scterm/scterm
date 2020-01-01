@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+rm -rf lib
+mkdir lib
+
+# pass --debug to help debug :advanced compilation
+npx shadow-cljs release app "$@"
+cp -p target/main.js lib/main.js
+echo "Built lib/main.js"

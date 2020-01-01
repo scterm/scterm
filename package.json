@@ -1,0 +1,50 @@
+{
+  "name": "scterm",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "ansicolor": "^1.1.92",
+    "pkg": "^4.4.2",
+    "react-devtools": "^4.4.0",
+    "robotjs": "^0.6.0",
+    "shadow-cljs": "2.8.83",
+    "source-map-support": "^0.5.13",
+    "ws": "^7.2.1"
+  },
+  "directories": {
+    "bin": "bin",
+    "doc": "docs",
+    "lib": "lib",
+    "src": "src"
+  },
+  "bin": {
+    "scterm": "bin/scterm"
+  },
+  "scripts": {
+    "run": "node target/js/compiled/scterm.js",
+    "compile": "shadow-cljs compile :app",
+    "build": "./scripts/build",
+    "watch": "shadow-cljs watch --debug :app",
+    "watch-test": "fswatch target/test.js |xargs -I {} -n1 bin/addts node target/test.js",
+    "test": "shadow-cljs compile :test && node target/test.js",
+    "uitest": "shadow-cljs compile :uitest && node target/uitest.js",
+    "uitest-debug": "shadow-cljs compile :uitest && node --inspect-brk target/uitest.js",
+    "pkg": "pkg --targets node10-mac,node10-linux lib/main.js",
+    "repl": "shadow-cljs cljs-repl app"
+  },
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "chalk": "^3.0.0",
+    "create-react-class": "^15.6.3",
+    "moment": "^2.24.0",
+    "node-fetch": "^2.6.0",
+    "npm": "^6.11.3",
+    "react": "^16.12.0",
+    "react-blessed": "^0.6.2",
+    "react-devtools-core": "^4.4.0",
+    "react-dom": "^16.12.0",
+    "strip-ansi": "^6.0.0",
+    "xmlhttprequest": "^1.8.0",
+    "xregexp": "^4.2.4"
+  }
+}

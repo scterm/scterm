@@ -1,0 +1,164 @@
+{:source-paths ["dev" "src/main" "src/test" "resources"]
+ :nrepl        {:port 8230
+                :cider true
+                :init-ns user
+                :middleware [refactor-nrepl.middleware/wrap-refactor
+                             dirac.nrepl/middleware]}
+ :jvm-opts     [
+                ;; "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+                "-Xmx2g"
+                ]
+
+ :dependencies [;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; clj core libs
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                [org.clojure/core.async "0.6.532"]
+
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; +BEGIN+ CLJS
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; reagent & re-frame family
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                [reagent "0.9.0-RC3" :exclusions [[cljsjs/react]
+                                                  [cljsjs/react-dom]
+                                                  [cljsjs/create-react-class]]]
+                [re-frame "0.11.0-rc3" :exclusions [[cljsjs/react]
+                                                    [cljsjs/react-dom]
+                                                    [cljsjs/create-react-class]]]
+                ;; remember to add node-fetch in package.json when
+                ;; migrating to http-fx-alpha
+                [day8.re-frame/async-flow-fx "0.1.0"]
+                [day8.re-frame/http-fx "v0.2.0"]
+                [day8.re-frame/test "0.1.5" :exclusions [[re-frame]]]
+
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; Deps for cli-matic
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; We keep a fork to make it work with node
+                ;; [cli-matic "0.3.10"]
+                [expound                "0.8.1"]
+                [orchestra              "2019.02.06-1"]
+                [org.clojure/spec.alpha "0.2.176"]
+                [org.clojure/tools.cli  "0.4.2"]
+
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; dev tools
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                [binaryage/devtools "0.9.10"]
+                [binaryage/dirac    "1.4.5"]
+                [re-frisk-remote    "0.5.5"]
+
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; util libs
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                [binaryage/oops     "0.7.0"]
+                [cljs-node-io       "1.1.2"]
+                [com.cognitect/transit-cljs "0.8.256"]
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; +END+ CLJS
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; +BEGIN+ CLJ
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; Logging
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                [org.clojure/tools.logging "0.5.0"]
+                [org.slf4j/slf4j-api "1.7.29"]
+                [org.apache.logging.log4j/log4j-api "2.12.1"]
+                [org.apache.logging.log4j/log4j-core "2.12.1"]
+                [org.apache.logging.log4j/log4j-slf4j-impl "2.12.1"]
+
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; database access
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                [org.clojure/java.jdbc  "0.7.9"]                                    ; basic JDBC access from Clojure
+                [toucan                 "1.15.0"    :exclusions [org.clojure/java.jdbc honeysql]]
+                [honeysql               "0.9.5"     :exclusions [org.clojure/clojurescript]]         ; Transform Clojure data structures to SQL
+                [org.xerial/sqlite-jdbc "3.28.0"]
+
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; http server
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                [io.pedestal/pedestal.service  "0.5.7"]
+                [io.pedestal/pedestal.route    "0.5.7"]
+                [io.pedestal/pedestal.jetty    "0.5.7"]
+                [cheshire                      "5.9.0"]
+                [clj-time                      "0.15.2"]
+
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;;; Misc
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                [me.raynes/fs                  "1.4.6"]
+                [selmer                        "1.12.17"]
+                [com.rpl/specter               "1.1.2"]
+
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; +END+ CLJ
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; +BEGIN+ COMMON
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                [better-cond        "2.1.0"]
+                [funcool/cuerdas    "2.2.1"]
+                [medley             "1.2.0"]
+                [redux              "0.1.4"]
+                [hiccup             "1.0.5"]
+                [integrant          "0.7.0"]
+                [integrant/repl     "0.3.1"]
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;; +END+ COMMON
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ]
+
+ :builds {:app {:output-to  "target/main.js"
+                :output-dir "target/js/compiled/prod"
+                :target     :node-script
+                :devtools   {:before-load      scterm.main-impl/before-reload
+                             ;; :preloads [scterm.preloads scterm.react-devtools]
+                             :after-load       scterm.main-impl/after-reload}
+                :dev        {:main             scterm.main/main!
+                             :output-to        "target/js/compiled/scterm.js"
+                             :output-dir       "target/js/compiled/dev"
+                             :closure-defines {"goog.DEBUG" true
+                                               "re_frame.trace.trace_enabled_QMARK_" true}
+                             }
+                :release    {:main             scterm.main/main!
+                             ;; :js-options
+                             ;; {:js-provider :shadow
+                             ;;  :keep-native-requires true
+                             ;;  }
+                             :compiler-options {:optimizations :advanced
+                                                :infer-externs true
+                                                :source-map true
+                                                :source-map-detail-level :all
+                                                }}}
+          :test {:output-to "target/test.js"
+                 :output-dir "target/js/compiled/test"
+                 :target :node-test
+                 :ns-regexp "-test$"
+
+                 :main scterm.test.runner/main
+
+                 ;; Disable autorun after "shadow-cljs compile test"
+                 ;; because our tests require real terminal
+                 ;; environment.
+                 :autorun false}
+
+          :uitest {:output-to "target/uitest.js"
+                   :output-dir "target/js/compiled/uitest"
+                   :target :node-test
+                   :ns-regexp "-uitest$"
+
+                   :main scterm.test.runner/main
+
+                   ;; If we turn on autorun, the terminal size would
+                   ;; only be 1x1 because it's inherited from the
+                   ;; parent yarn/shadow-cljs process
+                   :autorun false}}}

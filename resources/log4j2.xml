@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="warn" packages="org.apache.logging.log4j.core">
+  <loggers>
+    <root level="info">
+      <appender-ref ref="stdout"/>
+    </root>
+
+    <logger name="org.apache.zookeeper" level="warn"></logger>
+  </loggers>
+
+  <appenders>
+    <Console name="stdout">
+      <PatternLayout pattern="%d{ISO8601} %p %c: %m%n"/>
+    </Console>
+  </appenders>
+</configuration>

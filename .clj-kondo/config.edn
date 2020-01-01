@@ -1,0 +1,16 @@
+{:lint-as {scterm.test.utils/deftest cljs.test/deftest,
+           scterm.test.utils/defsynctest cljs.test/deftest,
+           scterm.test.utils/defasynctest cljs.test/deftest,
+           scterm.test.utils/defuitest cljs.test/deftest
+           scterm.utils/deftimer clojure.core/def
+           reagent.core/with-let clojure.core/let
+           io.pedestal.interceptor.helpers/defbefore clojure.core/defn
+           io.pedestal.interceptor.helpers/defafter clojure.core/defn}
+ :linters {:unresolved-symbol {:exclude [goog.DEBUG
+                                         (scterm.utils/prog1 [<>])
+                                         (scterm.test.utils/mock-event-handler [called])
+                                         (scterm.test.utils/mock-effect-handler [called])]},
+           :unused-namespace {:exclude [scterm.log scterm.blessed-utils]},
+           :unused-referred-var {:exclude {scterm.log [log]
+                                           clojure.core.async [go-loop timeout <! go]
+                                           }}}}
