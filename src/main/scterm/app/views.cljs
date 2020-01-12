@@ -62,7 +62,7 @@
           :height 10
           :style {:border {:fg :cyan}}
           :content (clojure.string/join "\n" help-tips)}]
-   [:box#demo1 (r/merge-props (when @demo-focus-on
+   #_[:box#demo1 (r/merge-props (when @demo-focus-on
                                 {:content (str "box#demo1: "
                                                (if @demo-focus-on
                                                  "focus ON"

@@ -21,6 +21,7 @@
     "scterm": "bin/scterm"
   },
   "scripts": {
+    "build-once": "yarn build --force-spawn",
     "run": "node target/js/compiled/scterm.js",
     "compile": "shadow-cljs compile :app",
     "build": "./scripts/build",
