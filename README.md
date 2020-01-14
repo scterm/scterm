@@ -1,4 +1,4 @@
-# Scrapy Cloud on your Terminal
+# SCTerm - Scrapy Cloud on Your Terminal
 
 ## Usage
 
