@@ -224,20 +224,25 @@
           :content (str "Oops! Error: " (red error))}
          props)])
 
+(def time-units
+  (array-map :year 31536000
+             :month 2592000
+             :day 86400
+             :hour 3600
+             :minute 60
+             :second 1))
+
 (defn parse-time-delta [delta]
   (second (reduce
            (fn [[remaining accu] [unit unit-secs]]
              [(rem remaining unit-secs)
               (assoc accu unit (quot remaining unit-secs))])
            [delta]
-           [[:day 86400]
-            [:hour 3600]
-            [:minute 60]
-            [:second 1]])))
+           time-units)))
 
 (defn readable-time-delta [delta]
   (let [delta (parse-time-delta delta)]
-    (->> (for [unit [:day :hour :minute :second]]
+    (->> (for [unit (keys time-units)]
            (let [value (get delta unit)]
              (when (pos? value)
                (str value " " (name unit) (when (> value 1) "s")))))

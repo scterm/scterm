@@ -34,16 +34,16 @@
 
 (def jobattr->display-fn
   ;; Here we use array map to keep the display order.
-  (array-map :spider nil
-             :spider_args format-spider-args
+  (array-map :close_reason ["Outcome" (fnil str "N/A")]
+             :spider nil
+             :spider_args ["Arguments" format-spider-args]
              :version nil
              :units nil
              :state nil
-             :close_reason (fnil str "N/A")
-             :errors (fnil str 0)
              :pending_time ["Schedule time" format-time]
              :running_time ["Start time" format-time]
-             :finished_time ["Finish time" format-time]))
+             :finished_time ["Finish time" format-time]
+             :errors (fnil str 0)))
 
 (defn get-runtime [jobinfo]
   (if-let [running_time (:running_time jobinfo)]
@@ -61,7 +61,9 @@
    (fn [[attr display-fn]]
      (let [default-name (-> attr
                             u/keyword->str
-                            str/capitalize)
+                            str/capitalize
+                            (str/split #"_")
+                            (as-> s (str/join " " s)))
            [attr-name value-fn] (cond
                                   (nil? display-fn)
                                   [default-name identity]
