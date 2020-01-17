@@ -54,7 +54,7 @@
  :info/success
  info-path
  (fn [{info :db} [_ details]]
-   ;; (def vdetails details)
+   (def vdetails details)
    ;; (log ":info/success called with %s" (str details))
    (let [details (js->clj details :keywordize-keys true)]
      (merge {:db (merge info {:api-error nil

@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [clojure.spec.alpha :as s]
             [reagent.core :as r]
+            ["moment" :as moment]
             ["chalk" :as chalk :refer [red]]
             [cuerdas.core :as cstr]
             [cljs-node-io.file :as file]
@@ -222,3 +223,24 @@
           :valign "middle"
           :content (str "Oops! Error: " (red error))}
          props)])
+
+(defn parse-time-delta [delta]
+  (second (reduce
+           (fn [[remaining accu] [unit unit-secs]]
+             [(rem remaining unit-secs)
+              (assoc accu unit (quot remaining unit-secs))])
+           [delta]
+           [[:day 86400]
+            [:hour 3600]
+            [:minute 60]
+            [:second 1]])))
+
+(defn readable-time-delta [delta]
+  (let [delta (parse-time-delta delta)]
+    (->> (for [unit [:day :hour :minute :second]]
+           (let [value (get delta unit)]
+             (when (pos? value)
+               (str value " " (name unit) (when (> value 1) "s")))))
+         (remove nil?)
+         (str/join ", ")
+         )))
