@@ -117,7 +117,11 @@
                        true
 
                        @(subscribe [:info/finished])
-                       false)]
+                       false
+
+                       ; we need add test case for this
+                       :else
+                       true)]
     (when fetch-stats?
       (dispatch [:logs/fetch-stats]))
     logs))
