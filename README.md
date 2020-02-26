@@ -1,5 +1,8 @@
 # SCTerm - Scrapy Cloud on Your Terminal
 
+![DEMO](scterm.gif)
+
+
 ## Usage
 
 The only params required are the api key and the job id.
